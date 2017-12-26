@@ -10,28 +10,26 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: 'monitoring'
       MYSQL_DATABASE: 'monitoring'
-    volume:
-      - monitoring_mysql_data
+    volumes:
+      - monitoring_mysql_data:/var/lib/mysql
 
   web:
     restart: always
     depends_on:
       - mysql
-      image: lambci/lambda:build-python3.6
-      container_name: monitoring_django
-      build: .
-      volumes:
-        - ./src:/www
-      working_dir:
-        - /www
-      env_file: .devenv
-      enviroment:
-        DEBUG: 'true'
-      expose:
-        - '8000'
-      command: /bin/bash /www/scripts/initialize_django.sh
-      links:
-        - mysql:mysql
+    image: lambci/lambda:build-python3.6
+    container_name: monitoring_django
+    volumes:
+      - ./src:/www
+    working_dir: /www
+    env_file: .devenv
+    environment:
+      DEBUG: 'true'
+    expose:
+      - '8000'
+    command: /bin/bash /www/scripts/initialize_django.sh
+    links:
+      - mysql:mysql
 
   nginx:
     restart: always
@@ -42,7 +40,7 @@ services:
     links:
       - web:web
     volumes:
-      - ./static:src/static
+      - ./static:/www/src/static
     ports:
       - '8080:80'
 
