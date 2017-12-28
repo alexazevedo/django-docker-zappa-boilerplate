@@ -1,0 +1,9 @@
+DEBUG=false
+SECRET_KEY=ik+7blilj9us*@p^v5_#t+kltd-tozg0xkym78k+4jdrlno&fl
+STATIC_ROOT=/www/static
+MEDIA_DIR=/www/media
+DB_HOST=db
+DB_NAME=monitoring
+DB_USER=root
+DB_PASS=monitoring
+DB_SERVICE=mysql

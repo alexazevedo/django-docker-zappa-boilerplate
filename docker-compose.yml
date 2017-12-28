@@ -1,7 +1,7 @@
 version: '3'
 
 services:
-  mysql:
+  db:
     restart: always
     image: mysql
     container_name: monitoring_mysql
@@ -16,11 +16,11 @@ services:
   web:
     restart: always
     depends_on:
-      - mysql
-    image: lambci/lambda:build-python3.6
+      - db
+    image: python:3
     container_name: monitoring_django
     volumes:
-      - ./src:/www
+      - .:/www
     working_dir: /www
     env_file: .devenv
     environment:
@@ -29,7 +29,7 @@ services:
       - '8000'
     command: /bin/bash /www/scripts/initialize_django.sh
     links:
-      - mysql:mysql
+      - db:db
 
   nginx:
     restart: always
@@ -40,7 +40,7 @@ services:
     links:
       - web:web
     volumes:
-      - ./static:/www/src/static
+      - ./static:/www/static
     ports:
       - '8080:80'
 
